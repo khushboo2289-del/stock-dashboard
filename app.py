@@ -4,9 +4,6 @@ from scoring import calculate_scores
 
 st.title("📊 Stock Dashboard")
 
-if st.button("Refresh Data"):
-    st.cache_data.clear()
-
 @st.cache_data
 def load_data():
     data = fetch_data()
@@ -15,4 +12,8 @@ def load_data():
 
 df = load_data()
 
-st.dataframe(df)
+# ✅ Safe display
+if df is None or df.empty:
+    st.warning("No data available. Try refreshing.")
+else:
+    st.dataframe(df)
