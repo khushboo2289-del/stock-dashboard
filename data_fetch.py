@@ -23,6 +23,12 @@ def fetch_data():
             df["VolumeSpike"] = df["VolumeSpike"].fillna(0)
             df["MA20"] = df["Close"].rolling(20).mean()
 
+            # ✅ IMPORTANT: check AFTER calculations
+            df = df.dropna()
+
+            if df.empty:
+                continue
+
             latest = df.iloc[-1]
 
             data.append({
