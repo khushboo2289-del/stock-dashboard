@@ -1,11 +1,16 @@
-def calculate_scores(df):
-    if df.empty:
-        return df
-        
 def normalize(series):
     return (series - series.min()) / (series.max() - series.min())
 
 def calculate_scores(df):
+    if df.empty:
+        return df
+
+    # ✅ Safety check for missing columns
+    required_cols = ["Returns", "VolumeSpike", "Trend"]
+    for col in required_cols:
+        if col not in df.columns:
+            return df
+
     df = df.copy()
 
     df["ReturnsScore"] = normalize(df["Returns"])
