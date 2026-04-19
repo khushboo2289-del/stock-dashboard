@@ -1,3 +1,7 @@
+def calculate_scores(df):
+    if df.empty:
+        return df
+        
 def normalize(series):
     return (series - series.min()) / (series.max() - series.min())
 
