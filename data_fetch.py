@@ -19,6 +19,7 @@ def fetch_data():
         df["Returns"] = df["Close"].pct_change(7)
         df["AvgVolume"] = df["Volume"].rolling(20).mean()
         df["VolumeSpike"] = df["Volume"] / df["AvgVolume"]
+        df["VolumeSpike"] = df["VolumeSpike"].fillna(0)
         df["MA20"] = df["Close"].rolling(20).mean()
 
         latest = df.iloc[-1]
