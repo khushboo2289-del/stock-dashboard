@@ -11,27 +11,31 @@ def fetch_data():
     data = []
 
     for stock in STOCKS:
-        df = yf.download(stock, period="3mo", interval="1d", progress=False)
+        try:
+            df = yf.download(stock, period="3mo", interval="1d", progress=False)
 
-        if df.empty:
-            continue
+            if df.empty:
+                continue
 
-        df["Returns"] = df["Close"].pct_change(7)
-        df["AvgVolume"] = df["Volume"].rolling(20).mean()
-        df["VolumeSpike"] = df["Volume"] / df["AvgVolume"]
-        df["VolumeSpike"] = df["VolumeSpike"].fillna(0)
-        df["MA20"] = df["Close"].rolling(20).mean()
+            df["Returns"] = df["Close"].pct_change(7)
+            df["AvgVolume"] = df["Volume"].rolling(20).mean()
+            df["VolumeSpike"] = df["Volume"] / df["AvgVolume"]
+            df["VolumeSpike"] = df["VolumeSpike"].fillna(0)
+            df["MA20"] = df["Close"].rolling(20).mean()
 
-        df = df.dropna()
+            df = df.dropna()
 
-        latest = df.iloc[-1]
+            latest = df.iloc[-1]
 
-        data.append({
-            "Ticker": stock,
-            "Price": latest["Close"],
-            "Returns": latest["Returns"],
-            "VolumeSpike": latest["VolumeSpike"],
-            "Trend": latest["Close"] > latest["MA20"]
-        })
+            data.append({
+                "Ticker": stock,
+                "Price": latest["Close"],
+                "Returns": latest["Returns"],
+                "VolumeSpike": latest["VolumeSpike"],
+                "Trend": latest["Close"] > latest["MA20"]
+            })
+
+        except Exception as e:
+            print(f"Error: {e}")
 
     return pd.DataFrame(data)
